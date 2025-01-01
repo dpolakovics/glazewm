@@ -125,8 +125,7 @@ keybindings:
     bindings: ["alt+shift+1"]
 ```
 
-**Full list of keys that can be used for keybindings:**
-
+**Full list of keys that can be used for keybindings:**  
 <details>
 <summary>Keys list</summary>
 
@@ -219,20 +218,9 @@ Workspaces need to be predefined via the `workspaces` property in the config fil
 
 ```yaml
 workspaces:
-  # This is the unique ID for the workspace. It's used in keybinding
-  # commands, and is also the label shown in 3rd-party apps (e.g. Zebar) if
-  # `display_name` is not provided.
   - name: "1"
-
-    # Optional override for the workspace label used in 3rd-party apps.
-    # Does not need to be unique.
     display_name: "Work"
-
-    # Optionally force the workspace on a specific monitor if it exists.
-    # 0 is your leftmost screen, 1 is the next one to the right, and so on.
     bind_to_monitor: 0
-
-    # Optionally prevent workspace from being deactivated when empty.
     keep_alive: false
 ```
 
@@ -240,46 +228,23 @@ workspaces:
 
 Commands can be run when a window is first launched. This is useful for adding window-specific behaviors like always starting a window as fullscreen or assigning to a specific workspace.
 
-Windows can be targeted by their process, class, and title. Multiple matching criteria can be used together to target a window more precisely.
-
 ```yaml
 window_rules:
   - commands: ["move --workspace 1"]
     match:
-      # Move browsers to workspace 1.
       - window_process: { regex: "msedge|brave|chrome" }
-
-  - commands: ["ignore"]
-    match:
-      # Ignores any Zebar windows.
-      - window_process: { equals: "zebar" }
-
-      # Ignores picture-in-picture windows for browsers.
-      # Note that *both* the title and class must match for the rule to run.
-      - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
-        window_class: { regex: "Chrome_WidgetWin_1|MozillaDialogClass" }
 ```
 
 ### Config: Window effects
 
-Visual effects can be applied to windows via the `window_effects` option. Currently, colored borders are the only effect available with more to come in the future.
-
-> Note: Window effects are exclusive to Windows 11.
+Visual effects can be applied to windows via the `window_effects` option.
 
 ```yaml
 window_effects:
-  # Visual effects to apply to the focused window.
   focused_window:
-    # Highlight the window with a colored border.
     border:
       enabled: true
       color: "#0000ff"
-
-  # Visual effects to apply to non-focused windows.
-  other_windows:
-    border:
-      enabled: false
-      color: "#d3d3d3"
 ```
 
 ### Config: Window behavior
@@ -288,66 +253,31 @@ The `window_behavior` config option exists to customize the states that a window
 
 ```yaml
 window_behavior:
-  # New windows are created in this state whenever possible.
-  # Allowed values: 'tiling', 'floating'.
   initial_state: "tiling"
-
-  # Sets the default options for when a new window is created. This also
-  # changes the defaults for when the state change commands, like
-  # `set-floating`, are used without any flags.
-  state_defaults:
-    floating:
-      # Whether to center floating windows by default.
-      centered: true
-
-      # Whether to show floating windows as always on top.
-      shown_on_top: false
-
-    fullscreen:
-      # Maximize the window if possible. If the window doesn't have a
-      # maximize button, then it'll be made fullscreen normally instead.
-      maximized: false
 ```
 
 ### Config: Binding modes
 
 Binding modes are used to modify keybindings while GlazeWM is running.
 
-A binding mode can be enabled with `wm-enable-binding-mode --name <NAME>` and disabled with `wm-disable-binding-mode --name <NAME>`.
-
 ```yaml
 binding_modes:
-  # When enabled, the focused window can be resized via arrow keys or HJKL.
   - name: "resize"
     keybindings:
       - commands: ["resize --width -2%"]
         bindings: ["h", "left"]
-      - commands: ["resize --width +2%"]
-        bindings: ["l", "right"]
-      - commands: ["resize --height +2%"]
-        bindings: ["k", "up"]
-      - commands: ["resize --height -2%"]
-        bindings: ["j", "down"]
-      # Press enter/escape to return to default keybindings.
-      - commands: ["wm-disable-binding-mode --name resize"]
-        bindings: ["escape", "enter"]
 ```
 
 ## FAQ
 
-**Q: How do I run GlazeWM on startup?**
-
+**Q: How do I run GlazeWM on startup?**  
 Create a shortcut for the executable by right-clicking on the GlazeWM executable -> `Create shortcut`. Put the shortcut in your startup folder, which you can get to by entering `shell:startup` in the top bar in File Explorer.
 
-**Q: How can I create `<insert layout>`?**
+**Q: How can I create `<insert layout>`?**  
+You can create custom layouts by changing the tiling direction with `alt+v`. This changes where the next window is placed in relation to the current window.
 
-You can create custom layouts by changing the tiling direction with `alt+v`. This changes where the next window is placed _in relation to the current window_. If the current window's direction is horizontal, the new window will be placed to the right of it. If it is vertical, it will be placed below it. This also applies when moving windows; the tiling direction of the stationary window will affect where the moved window will be placed.
-
-Community-made scripts like [ParasiteDelta/GlaAlt](https://github.com/ParasiteDelta/GlaAlt) and [burgr033/GlazeWM-autotiling-python](https://github.com/burgr033/GlazeWM-autotiling-python) can be used to automatically change the tiling direction. Native support for automatic layouts isn't _currently_ supported.
-
-**Q: How do I create a rule for `<insert application>`?**
-
-To match a specific application, you need a command to execute and either the window's process name, title, or class name. For example, if you use Flow-Launcher and want to make the settings window float, you can do the following:
+**Q: How do I create a rule for `<insert application>`?**  
+To match a specific application, you need a command to execute and either the window's process name, title, or class name. For example, if you use Flow-Launcher and want to make the settings window float:
 
 ```yaml
 window_rules:
@@ -357,11 +287,12 @@ window_rules:
         window_title: { equals: "Settings" }
 ```
 
-Programs like Winlister or AutoHotkey's Window Spy can be useful for getting info about a window.
-
-**Q: How can I ignore GlazeWM's keybindings when `<insert application>` is focused?**
-
+**Q: How can I ignore GlazeWM's keybindings when `<insert application>` is focused?**  
 This isn't currently supported, however, the keybinding `alt+shift+p` in the default config is used to disable all other keybindings until `alt+shift+p` is pressed again.
+
+### Tabbed layout
+Toggling a tabbed layout can be done via `alt+b` by default. Only one tab is shown at a time, and you can switch tabs by the provided commands.
+This can help organize windows in a single container under multiple tabs, similarly to a tabbed layout in i3 or SwayWM.
 
 [discord-badge]: https://img.shields.io/discord/1041662798196908052.svg?logo=discord&colorB=7289DA
 [discord-link]: https://discord.gg/ud6z3qjRvM

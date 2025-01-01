@@ -103,7 +103,7 @@ window_behavior:
 
     fullscreen:
       # Maximize the window if possible. If the window doesn't have a
-      # maximize button, then it'll be fullscreen'ed normally instead.
+      # maximize button, then it'll be made fullscreen'ed normally instead.
       maximized: false
 
       # Whether to show fullscreen windows as always on top.
@@ -132,7 +132,7 @@ window_rules:
 
       # Ignore rules for various 3rd-party apps.
       - window_process: { equals: 'PowerToys' }
-        window_class: { regex: 'HwndWrapper\[PowerToys\.PowerAccent.*?\]' }
+        window_class: { regex: 'HwndWrapper\\[PowerToys\\.PowerAccent.*?\\]' }
       - window_process: { equals: 'PowerToys' }
         window_title: { regex: '.*? - Peek' }
       - window_process: { equals: 'Lively' }
@@ -237,9 +237,7 @@ keybindings:
   - commands: ['wm-redraw']
     bindings: ['alt+shift+w']
 
-  # Launch CMD terminal. Alternatively, use `shell-exec wt` or
-  # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
-  # Terminal and Git Bash respectively.
+  # Launch CMD terminal.
   - commands: ['shell-exec cmd']
     bindings: ['alt+enter']
 
@@ -303,3 +301,7 @@ keybindings:
     bindings: ['alt+shift+8']
   - commands: ['move --workspace 9', 'focus --workspace 9']
     bindings: ['alt+shift+9']
+
+  # Toggles tabbed layout using alt+b
+  - commands: ['toggle-tabbed-layout']
+    bindings: ['alt+b']

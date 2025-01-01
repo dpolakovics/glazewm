@@ -1,0 +1,6 @@
+project_name: "glazewm"
+default_prompt_blocks:
+  - "basic-prompt"
+  - "rust-development"
+initial_files:
+  - "README.md"
